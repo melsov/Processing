@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Contents/Resources/Java/tools/Mangler/Mangler.iml" filepath="$PROJECT_DIR$/Contents/Resources/Java/tools/Mangler/Mangler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Processing.iml" filepath="$PROJECT_DIR$/Processing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Contents/Resources/Java/libraries/dxf/dxf.iml" filepath="$PROJECT_DIR$/Contents/Resources/Java/libraries/dxf/dxf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Contents/Resources/Java/libraries/net/net.iml" filepath="$PROJECT_DIR$/Contents/Resources/Java/libraries/net/net.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Contents/Resources/Java/libraries/ocd/ocd.iml" filepath="$PROJECT_DIR$/Contents/Resources/Java/libraries/ocd/ocd.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/opengl.iml" filepath="$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/opengl.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Contents/Resources/Java/libraries/pdf/pdf.iml" filepath="$PROJECT_DIR$/Contents/Resources/Java/libraries/pdf/pdf.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Contents/Resources/Java/libraries/serial/serial.iml" filepath="$PROJECT_DIR$/Contents/Resources/Java/libraries/serial/serial.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Contents/Resources/Java/libraries/video/video.iml" filepath="$PROJECT_DIR$/Contents/Resources/Java/libraries/video/video.iml" />
+    </modules>
+  </component>
+</project>
+

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="library3">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/serial/library/serial.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/serial/library/RXTXcomm.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

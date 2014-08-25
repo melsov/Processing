@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="Java">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/ant-launcher.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/ant.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/quaqua.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/antlr.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/ecj.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/jna.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/pde.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

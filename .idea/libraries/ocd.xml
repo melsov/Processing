@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ocd">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/ocd/library/ocd.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

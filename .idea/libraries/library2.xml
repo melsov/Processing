@@ -1,0 +1,23 @@
+<component name="libraryTable">
+  <library name="library2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/gluegen-rt-natives-windows-i586.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/gluegen-rt-natives-linux-i586.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/gluegen-rt-natives-windows-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/gluegen-rt.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/gluegen-rt-natives-macosx-universal.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/jogl-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/jogl-natives-windows-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/jogl-natives-macosx-universal.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/opengl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/gluegen-rt-natives-macosx-ppc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/jogl-natives-macosx-ppc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/jogl-natives-linux-i586.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/jogl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/gluegen-rt-natives-linux-amd64.jar!/" />
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/opengl/library/jogl-natives-windows-i586.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

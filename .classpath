@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="data"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="Contents/Resources/Java/core.jar"/>
+	<classpathentry kind="lib" path="Contents/Resources/Java/libraries/serial/library/serial.jar"/>
+	<classpathentry kind="lib" path="Contents/Resources/Java/libraries/opengl/library/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="Contents/Resources/Java/libraries/opengl/library/jogl.jar"/>
+	<classpathentry kind="lib" path="Contents/Resources/Java/libraries/opengl/library/opengl.jar"/>
+	<classpathentry kind="lib" path="Contents/Resources/Java/libraries/serial/library/RXTXcomm.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Processing/libNative"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="SVGSalamander/svgSalamander-tiny.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JavaChallenges"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

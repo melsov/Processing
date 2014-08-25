@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dxf">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Contents/Resources/Java/libraries/dxf/library/dxf.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
