@@ -1,16 +1,11 @@
+import drawbotV3OffTrack.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import processing.core.*;
 import processing.serial.*;
-import drawbotV3.Asserter;
-import drawbotV3.BotController;
-import drawbotV3.DrawBot;
-import drawbotV3.KeyHandling;
-import drawbotV3.MotorInstructions;
-import drawbotV3.Settings;
-import drawbotV3.ShortToBytes;
+
 	 
  // Graphing sketch
   
@@ -92,7 +87,13 @@ public class SerialCallResponseASCIIV3 extends PApplet implements SerialPortEven
 	    	return;
 	    }
 	    
-//	    String myString = myPort.readStringUntil('\n');
+	    
+//	    String fromArduinoString = myPort.readStringUntil('\n');
+//	    if (fromArduinoString.equals('*')) {
+//	    	println("Got out of data sentinel");
+//	    	myPort.clear();
+//	    	return;
+//	    }
 
 //	    int req = dataRequestAmount(myPort);
 	    int request_amt = 5; // Math.min(req, 5); // 2;   //
