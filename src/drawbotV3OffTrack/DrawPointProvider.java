@@ -113,15 +113,10 @@ public class DrawPointProvider {
 		svgToPoint.loadFile();
 		
 		/* calculate drawing bounds */
-		double halfGondolaDim_mm = 74;
-		double halfMachineW = Settings.MachineWidth / 2.0; //  DrawBot.CanvasWidth / 2.0;
-		double halfD = halfMachineW * .5;
-		Pointt halfDim = new Pointt(halfD,halfD);
-		Pointt newMin = startPoint.copy(); 
-		int hedge_width = 10;
-		newMin.x = (float) (halfGondolaDim_mm + hedge_width); 
-		Pointt newMax = startPoint.copy().plus(halfDim);
-		newMax.x = (float) (Settings.MachineWidth - halfGondolaDim_mm - hedge_width);
+
+		Pointt hedge = new Pointt(10, 10);
+		Pointt newMin = Settings.PAPER_UPPER_LEFT_CORNER.copy().plus(hedge); 
+		Pointt newMax = newMin.plus(Settings.PAPER_DIMENSIONS).minus(hedge);
 
 		points = svgToPoint.getPointSet().scaleToFitNewMinMax(newMin, newMax);
 		

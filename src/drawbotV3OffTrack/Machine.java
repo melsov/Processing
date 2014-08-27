@@ -16,7 +16,7 @@ public class Machine
 	public float machineWidth = Settings.MachineWidth;
 	public float machineHeight = 0; 
 
-	private Pointt startPoint = new Pointt(machineWidth/2.0, Settings.GONDOLA_TOP_AT_175_MM_MARK_HEIGHT);
+	private Pointt startPoint = new Pointt(machineWidth/2.0, Settings.GONDOLA_HOME_POINT_HEIGHT_MM);
 	private Motor leftMotor;
 	private Motor rightMotor;
 	

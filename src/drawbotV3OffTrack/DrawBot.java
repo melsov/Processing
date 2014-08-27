@@ -49,7 +49,7 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener, Runn
 	Pointt curPoint = new Pointt();
 	Pointt lastPoint = new Pointt();
 	DrawPointProvider drawPointProvider = new DrawPointProvider(machine.startPoint());
-	public static int CanvasHeight = (int) 533.4; // 21 inches in mm (unlike with width, height precision is not vital) 
+	public static int CanvasHeight = 794; // 21 inches in mm (unlike with width, height precision is not vital) 
 	
 	private static int lowerInfoHeight = 200;
 	private static int lowerInfoWidth = 800 - Settings.MachineWidth;
