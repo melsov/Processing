@@ -4,12 +4,12 @@ import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import processing.core.*;
 import processing.serial.*;
-import drawbotV3OffTrack.Asserter;
-import drawbotV3OffTrack.BotController;
-import drawbotV3OffTrack.DrawBot;
-import drawbotV3OffTrack.KeyHandling;
-import drawbotV3OffTrack.MotorInstructions;
-import drawbotV3OffTrack.Settings;
+import drawbotV3_2.Asserter;
+import drawbotV3_2.BotController;
+import drawbotV3_2.DrawBot;
+import drawbotV3_2.KeyHandling;
+import drawbotV3_2.MotorInstructions;
+import drawbotV3_2.Settings;
 	 
  // Graphing sketch
   

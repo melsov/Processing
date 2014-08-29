@@ -19,7 +19,7 @@ import processing.serial.*;
  // This example code is in the public domain.
 	 
 // **** V3 !!****
-public class SerialCallResponseASCIIV3 extends PApplet implements SerialPortEventListener, KeyHandling {
+public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements SerialPortEventListener, KeyHandling {
 	 
 	 /**
 	 * 
@@ -43,10 +43,6 @@ public class SerialCallResponseASCIIV3 extends PApplet implements SerialPortEven
 	private byte DATA_REQUEST_SENTINEL = '#';
 	
 	public void setup() {
-		
-		println("Dude: " + Settings.MaxGondolaSpeed_MM_S + 
-				" (AbsMaxMotorStepsPerSecond / Motor.STEPS_PER_REV) is " + (Settings.AbsMaxMotorStepsPerSecond / Motor.STEPS_PER_REV));
-		Asserter.assertTrue(Settings.MaxGondolaSpeed_MM_S != 0, "Dude: " + Settings.MaxGondolaSpeed_MM_S);
 
 		if (!DialogBoxer.QuestionWithTwoOptions("Do you want to really run the drawing machine or just show a simulation?",
 				"Just Simulation", "Really Run") ) {
@@ -114,8 +110,17 @@ public class SerialCallResponseASCIIV3 extends PApplet implements SerialPortEven
 	    
     	if (myString.equals("HI")) {
     		println("arduino said hi");
+    	
+    		sendNowhereInstructions();
     		madeFirstContact = true;
     		DELAYTIMEFRAMES = 0; // non-zero seems to 'de-glitch' serial communication: TODO: discern why this is
+    		try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
     	} 
     	println("it is " + madeFirstContact + " that we're in touch with the arduino");
     	return;
@@ -134,18 +139,46 @@ public class SerialCallResponseASCIIV3 extends PApplet implements SerialPortEven
 	    	attemptFirstContact();
 	    	return;
 	    }
+	    
 	    getMessageFromSerial();
 	    int request_amt = 5;
 	    sendInstructions(request_amt);
+	    serialPort.clear();
+//	    Thread.sleep(80);
 	}
 	
 	private void getMessageFromSerial() {
 		String msg = serialPort.readStringUntil('\n');
-		serialPort.clear();
-		println(msg);
+		println(trim(msg));
 	}
-	
+
+	int debug_count = 0;
 	private void sendInstructions(int howMany) {
+		byte[] bs = new byte[howMany * MotorInstructions.ByteArrayLength()];
+		for (int i = 0; i < howMany; ++i) {
+			MotorInstructions motorIns = botController.nextMotorInstructions();
+			byte[] bb = motorIns.toByteArray();
+			if (debug_count++ % 10 == 0) debugSpeed(bb);
+			for (int j = 0; j < bb.length ; j++) {
+				bs[i * MotorInstructions.ByteArrayLength() + j] = bb[j];
+//				print(bb[j]);
+//				print('%');
+			}
+//			println();
+		}
+		serialPort.write(bs);
+	}
+	private void debugSpeed(byte[] bb) {
+		byte[] bbl = new byte[] {bb[2], bb[3]};
+		byte[] bbr = new byte[] {bb[4], bb[5]};
+		int lspeed = ConvertToBytes.IntFromSignedBytePair(bbl);
+		int rspeed = ConvertToBytes.IntFromSignedBytePair(bbr);
+		println("left speed: "+ lspeed);
+		println("right speed "+ rspeed);
+		println(ConvertToBytes.intAsBinaryString(lspeed));
+		println(ConvertToBytes.intAsBinaryString(rspeed));
+	}
+	private void sendInstructionsOLDGOLD(int howMany) {
 		byte[] bs = new byte[howMany * 4];
 		for (int i = 0; i < howMany; ++i) {
 			byte[] bb = getBytes(botController.nextMotorInstructions());
@@ -154,6 +187,16 @@ public class SerialCallResponseASCIIV3 extends PApplet implements SerialPortEven
 			}
 		}
 		serialPort.write(bs);
+	}
+	private void sendNowhereInstructions() {
+//		byte[] bs = new byte[1 * MotorInstructions.ByteArrayLength()];
+//		for (int i = 0; i < 1; ++i) {
+		byte[] bb = new byte[MotorInstructions.ByteArrayLength()]; //  getBytes(botController.nextMotorInstructions());
+		for (int j = 0; j < bb.length ; j++) {
+			bb[ j] = 0; // bb[j];
+		}
+//		}
+		serialPort.write(bb);
 	}
 	
 	private byte[] getBytes(MotorInstructions motorIns) {
@@ -229,8 +272,7 @@ public class SerialCallResponseASCIIV3 extends PApplet implements SerialPortEven
 	}
 	  
 	public static void main(String args[]) {
-	
-		PApplet.main(new String[] { "--present", "SerialCallResponseASCII" });
+		PApplet.main(new String[] { "--present", "SerialCallResponseASCIIV3_3SendInt" });
 	}
 	@Override
 	public void serialEvent(SerialPortEvent spe) {
@@ -238,6 +280,13 @@ public class SerialCallResponseASCIIV3 extends PApplet implements SerialPortEven
 		
 	}
 	
+	private void sendInstructionsNOT(int howMany) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < howMany; ++i) {
+			sb.append(botController.nextMotorInstructions().toInstructionString());
+		}
+		serialPort.write(sb.toString());
+	}
 	
 
 }
