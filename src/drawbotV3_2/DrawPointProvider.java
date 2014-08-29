@@ -335,7 +335,7 @@ public class DrawPointProvider {
 		return curIndex;
 	}
 	public double percentDone() {
-		return (curIndex/(double)cvList.size());
+		return pointInterpolator.percentDone(); // (curIndex/(double)cvList.size());
 	}
 	public ArrayList<CoordVelocity> getUninterpolatedPointts() {
 		return cvList;

@@ -22,7 +22,9 @@ import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -79,6 +81,7 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener, Runn
 	private int CANVAS_SCALE = 1;
 	
 	public boolean isTestClient;
+	private String startTime = "";
 	
 	public DrawBot()
 	{
@@ -86,6 +89,15 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener, Runn
 	}
 	public DrawBot(boolean _autoAnimate) {
 		autoAnimate = _autoAnimate;
+	}
+	
+	private String timeNowString(boolean wantDay) {
+	      SimpleDateFormat ft;
+	      if (wantDay)
+		      ft = new SimpleDateFormat ("E yyyy.MM.dd 'at' hh:mm:ss a zzz");
+	      else
+	    	  ft = new SimpleDateFormat ("E hh:mm:ss a zzz");
+	      return ft.format(new Date());
 	}
 	
 	public void addNotify() {
@@ -104,6 +116,7 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener, Runn
 			Timer t = new Timer(20, this);
 			t.start();
 		}
+		startTime = "start: "+ timeNowString(true);
 	}
 	
 	public void paint(Graphics g) {
@@ -128,6 +141,9 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener, Runn
 			drawTextAt(g2,new Pointt(Settings.MACHINE_WIDTH *.4f,  40), "PRESS: A TO START/STOP", 0, Color.GREEN );
 			drawTextAt(g2,new Pointt(Settings.MACHINE_WIDTH *.4f,  60), "N TO STEP ONE AT A TIME", 0, Color.cyan );
 		}
+		drawTextAt(g2,new Pointt(Settings.MACHINE_WIDTH + 190, CanvasHeight - 60), startTime, 0, Color.cyan );
+		if (percentDone < 1.0)
+			drawTextAt(g2,new Pointt(Settings.MACHINE_WIDTH + 190, CanvasHeight - 40), timeNowString(false), 0, Color.cyan );
     }
 	private void drawMotorsAndChords(Graphics2D g2) {
 		Pointt leftPos = machine.motorLocationL;
@@ -165,7 +181,7 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener, Runn
 		Pointt textO = loc.plus(new Pointt(0, pushDownY));
 		textO.x = textO.x > 50 ? textO.x - 150 : textO.x;
 		g.setPaint(Color.DARK_GRAY);
-		Rectangle2D r = new Rectangle2D.Double(textO.x - 2, textO.y - 8, 10 * str.length(), 20);
+		Rectangle2D r = new Rectangle2D.Double(textO.x - 2, textO.y - 10, 10 * str.length(), 20);
 		g.fill(r);
 		g.setPaint(col);
 		g.drawChars(dd, 0, dd.length, (int) textO.x,(int) textO.y);

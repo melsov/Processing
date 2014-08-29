@@ -28,6 +28,8 @@ public class PointtInterpolatorAsync
 		filterOutClosePoints(points);
 	}
 	
+	public float percentDone() { return (pointsIndex + 1)/(float)points.size(); }
+	
 	public boolean hasNext() { return pointsIndex < points.size(); }
 
 	public ArrayList<CoordVelocity> interpolatePoints() {

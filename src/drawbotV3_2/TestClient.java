@@ -33,7 +33,7 @@ public class TestClient extends JFrame implements KeyListener, KeyHandling, Acti
 	private BotController botController;
 	private boolean autoDraw = false;
 	
-	private static int UPDATE_SPEED = 20; 
+	private static int UPDATE_SPEED = 50; 
 	
 	public TestClient() {
 //		Settings.TimeSlice_US *= 16;
