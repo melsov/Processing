@@ -1,6 +1,10 @@
 import drawbotV3_2.*;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+
+import cz.adamh.utils.NativeUtils;
+
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import processing.core.*;
@@ -141,15 +145,13 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 	    }
 	    
 	    getMessageFromSerial();
-	    int request_amt = 5;
+	    int request_amt = 10;
 	    sendInstructions(request_amt);
 	    serialPort.clear();
-//	    Thread.sleep(80);
 	}
 	
 	private void getMessageFromSerial() {
-		String msg = serialPort.readStringUntil('\n');
-		println(trim(msg));
+		print(serialPort.readStringUntil('\n'));
 	}
 
 	int debug_count = 0;
@@ -158,13 +160,10 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 		for (int i = 0; i < howMany; ++i) {
 			MotorInstructions motorIns = botController.nextMotorInstructions();
 			byte[] bb = motorIns.toByteArray();
-			if (debug_count++ % 10 == 0) debugSpeed(bb);
+			//if (debug_count++ % 10 == 0) debugSpeed(bb);
 			for (int j = 0; j < bb.length ; j++) {
 				bs[i * MotorInstructions.ByteArrayLength() + j] = bb[j];
-//				print(bb[j]);
-//				print('%');
 			}
-//			println();
 		}
 		serialPort.write(bs);
 	}
@@ -189,13 +188,8 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 		serialPort.write(bs);
 	}
 	private void sendNowhereInstructions() {
-//		byte[] bs = new byte[1 * MotorInstructions.ByteArrayLength()];
-//		for (int i = 0; i < 1; ++i) {
-		byte[] bb = new byte[MotorInstructions.ByteArrayLength()]; //  getBytes(botController.nextMotorInstructions());
-		for (int j = 0; j < bb.length ; j++) {
-			bb[ j] = 0; // bb[j];
-		}
-//		}
+		byte[] bb = new byte[MotorInstructions.ByteArrayLength()];
+		for (int j = 0; j < bb.length ; j++) { bb[ j] = 0; }
 		serialPort.write(bb);
 	}
 	
@@ -209,6 +203,7 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 		return res;
 	}
 
+	//TODO: make pause mode release serial port, to be able to re-flash arduino...
 	public void doKeyPressed(KeyEvent ke) {
 		int k = ke.getKeyCode();
 		if (k == KeyEvent.VK_N) {
@@ -248,7 +243,7 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 
 		@Override
 		public void run() {
-			System.out.println("shutting down...sending zero instrucs");
+			System.out.println("shutting down...NOT sending zero instrucs");
 			
 //			String serString = null;
 //			int tries=0;
@@ -260,17 +255,19 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 //				}
 //			}
 //			System.out.println("SHUT DOWN ROUTINE TURNED OFF");
-			serialPort.stop();
+			if (serialPort != null)
+				serialPort.stop();
 //			sendNextInstructions(goAbsZeroInstructions);
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
 		
 	}
-	  
+	
+	/*
+	 * TODO: Load JNIs
+	 * courtesy: http://stackoverflow.com/questions/2937406/how-to-bundle-a-native-library-and-a-jni-library-inside-a-jar
+	 */
+
 	public static void main(String args[]) {
 		PApplet.main(new String[] { "--present", "SerialCallResponseASCIIV3_3SendInt" });
 	}

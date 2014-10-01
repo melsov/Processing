@@ -66,7 +66,7 @@ public class PointtInterpolatorAsync
 			if (outPointsIndex > startingIndex + limit) {
 				return -1;
 			}
-			if (!Settings.ShouldInterpolate) break;
+			if (!Settings.INTERPOLATE_MODE) break;
 		}
 		return limit - (outPointsIndex - startingIndex);
 	}
@@ -190,7 +190,7 @@ public class PointtInterpolatorAsync
 				nextDirection = nextDirection.unitPointt();
 			}
 			double cosAngle = direction.dot(nextDirection);
-			cosAngle = pow(cosAngle, 5); // juice the cosAngle b/c gocupi does it? (helps non-straight lines?)
+			cosAngle = pow(cosAngle, 1); // juice the cosAngle (pow 3) b/c gocupi does it? (helps non-straight lines?)
 			exitSpeed = Settings.MaxGondolaSpeed_MM_S * max(cosAngle, 0);
 			cruiseSpeed = Settings.MaxGondolaSpeed_MM_S;
 			acceleration = Settings.Acceleration_MM_S2;

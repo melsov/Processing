@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JFileChooser;
@@ -26,7 +27,7 @@ import drawbotV3_2.Settings;
 
 public class DrawPointProvider {
 	private ArrayList<Pointt> points = new ArrayList<Pointt>();
-	public final int DRAWPOINT_QUEUE_SIZE = 30;
+	public final int DRAWPOINT_QUEUE_SIZE = 30000;
 	private volatile LinkedBlockingQueue<CoordVelocity> cvs;
 	private ArrayList<CoordVelocity> cvList = new ArrayList<CoordVelocity>();
 	PointtInterpolatorAsync pointInterpolator;
@@ -57,7 +58,7 @@ public class DrawPointProvider {
 	}
 	private void setupCVS() {
 		pointInterpolator = new PointtInterpolatorAsync(points);
-		cvList = pointInterpolator.interpolatePoints(2);
+		cvList = pointInterpolator.interpolatePoints(DRAWPOINT_QUEUE_SIZE / 6);
 		cvs.addAll(cvList);
 		
 //		for(int i=0; i < 2; ++i)
@@ -73,11 +74,15 @@ public class DrawPointProvider {
 		ArrayList<CoordVelocity> cvlist = pointInterpolator.interpolatePoints(Math.min(cvs.remainingCapacity() - 3, 200));
 		if (bigCVList != null) bigCVList.addAll(cvlist);
 		for(CoordVelocity cv : cvlist) {
-				try { cvs.put(cv); } catch (InterruptedException e) { e.printStackTrace(); }
+				try { 
+//					cvs.put(cv);
+					cvs.offer(cv, 50, TimeUnit.MILLISECONDS);
+				} catch (InterruptedException e) {
+					B.bugln("add more points was interrupted");
+//					Asserter.assertFalseAndDie("death");
+					e.printStackTrace(); 
+				}
 		}
-		
-		
-		
 		try { Thread.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	public class AsyncDrawPoints implements Runnable
@@ -97,15 +102,15 @@ public class DrawPointProvider {
 		if (!wantsShape) {
 			LoadSVGFile(svgFileChooser.getSVGFileFromDialog());
 		} else {
-//			paperProportionalRectangleCW(Settings.PAPER_DIMENSIONS.minus(new Pointt(90,90)));
-//			paperProportionalRectangle(Settings.PAPER_DIMENSIONS.minus(new Pointt(90,90)));
+//			paperProportionalRectangleCW(Settings.PAPER_DIMENSIONS.multiply(.15));
+			paperProportionalRectangle(Settings.PAPER_DIMENSIONS.multiply(.15));
 //			circle();
 //			spiralInnerToOuter();
 //			spiral();
 //			squareSpiral();
 //			upAndDown();
 //			upAndDownTwoStepDown();
-			sideSide();
+//			sideSide();
 //			diag();
 //			jags();
 //			shiftPointSetBeyondStartY();
@@ -135,9 +140,9 @@ public class DrawPointProvider {
 		
 		/* calculate drawing bounds */
 
-		int hedgeAmount = 100;
+		int hedgeAmount = (int) (Settings.PAPER_DIMENSIONS.y * .35);
 		Pointt hedge = new Pointt(hedgeAmount, hedgeAmount);
-		Pointt newMin = Settings.PAPER_UPPER_LEFT_CORNER.copy().plus(hedge.multiply(.3f)); 
+		Pointt newMin = Settings.PAPER_UPPER_LEFT_CORNER.copy().plus(hedge.multiply(.5f)); 
 		Pointt newMax = newMin.plus(Settings.PAPER_DIMENSIONS).minus(hedge);
 
 		points = svgToPoint.getPointSet().scaleToFitNewMinMax(newMin, newMax);
@@ -325,6 +330,7 @@ public class DrawPointProvider {
 //			currentCoordVelocity = CoordVelocity.GoNowhereCoordVelocity();
 			currentCoordVelocity = new CoordVelocity(currentCoordVelocity.getCoord(), currentCoordVelocity.getVelocity().multiply(.01f));
 			++gotNullCount;
+			B.bugln("giving a dummy coord: null count: " + gotNullCount);
 		} else {
 			currentCoordVelocity = result;
 		}
@@ -335,6 +341,7 @@ public class DrawPointProvider {
 		return curIndex;
 	}
 	public double percentDone() {
+		if (pointInterpolator == null) return 0d;
 		return pointInterpolator.percentDone(); // (curIndex/(double)cvList.size());
 	}
 	public ArrayList<CoordVelocity> getUninterpolatedPointts() {
