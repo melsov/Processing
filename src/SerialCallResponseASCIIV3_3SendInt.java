@@ -1,10 +1,10 @@
 import drawbotV3_2.*;
+import drawbotV3_2.DrawPointProvider.NudgeMode;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import cz.adamh.utils.NativeUtils;
-
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import processing.core.*;
@@ -45,14 +45,19 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 	private boolean madeFirstContact = false;
 
 	private byte DATA_REQUEST_SENTINEL = '#';
+	private TestClient testClient;
 	
 	public void setup() {
-
+		println("send int!!!");
 		if (!DialogBoxer.QuestionWithTwoOptions("Do you want to really run the drawing machine or just show a simulation?",
 				"Just Simulation", "Really Run") ) {
 			TestClient tc = new TestClient();
-			this.frame.add(tc);
+			testClient = tc;
+			tc.serialForKeyPresses = this;
+//			this.frame.add(tc);
+			drawBot = tc.drawBot;
 			noLoop();
+			
 			return;
 		}
 		
@@ -209,33 +214,30 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 		if (k == KeyEvent.VK_N) {
 			nudgeMode = !nudgeMode;
 			System.out.println("**** Nudge Mode: " + nudgeMode + " ******");
-			if (!nudgeMode) {
-				nudgeInstructions = new MotorInstructions();
+			drawBot.setNudgeMode(nudgeMode ? NudgeMode.NOWHERE : NudgeMode.OFF);
+			if (testClient != null) {
+				testClient.autoDraw = !nudgeMode;
 			}
 		}
 		if (nudgeMode) {
 			nudgeInstructions.setToNudgeSentinel();
-			serialPort.clear(); // help with instructions?
+			if (serialPort != null) serialPort.clear(); // help with instructions?
 			int nudgeSpeed = 5;
-			if (k == KeyEvent.VK_W) {
-				nudgeInstructions.addLeftSteps(nudgeSpeed);//  leftMotorSteps += nudgeSpeed;
-			} else if (k == KeyEvent.VK_S) {
-				nudgeInstructions.addLeftSteps(-nudgeSpeed); // leftMotorSteps += -nudgeSpeed;
-			} 
-			if (k == KeyEvent.VK_K) {
-				nudgeInstructions.addRightSteps(nudgeSpeed);   //rightMotorSteps += nudgeSpeed;
-			} else if (k == KeyEvent.VK_I) {
-				nudgeInstructions.addRightSteps(-nudgeSpeed);  // .rightMotorSteps += -nudgeSpeed;
+			if (k == KeyEvent.VK_UP) {
+				drawBot.setNudgeMode(NudgeMode.UP);
+			} else if (k == KeyEvent.VK_DOWN) {
+				drawBot.setNudgeMode(NudgeMode.DOWN);
+			} else if (k == KeyEvent.VK_RIGHT) {
+				drawBot.setNudgeMode(NudgeMode.RIGHT);
+			} else if (k == KeyEvent.VK_LEFT) {
+				drawBot.setNudgeMode(NudgeMode.LEFT);
+			} else if (k == KeyEvent.VK_E) {
+				drawBot.setNudgeMode(NudgeMode.NOWHERE);
 			}
-			if (k == KeyEvent.VK_H) {
-				nudgeInstructions = new MotorInstructions();
+			if (testClient != null) {
+				testClient.doNextPoint();
 			}
-			if (k == KeyEvent.VK_Z ) {
-				nudgeInstructions.setToGoAbsZeroSentinel();
-			}
-			
 		}
-
 	}
 	
 	private class ShutdownRoutine implements Runnable

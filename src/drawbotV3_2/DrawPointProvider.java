@@ -38,6 +38,25 @@ public class DrawPointProvider {
 	private HashMap<String, String> defaultFiles;
 	AsyncDrawPoints asyncDrawPoints;
 	
+	public enum NudgeMode {
+		OFF (new Pointt(0,0)),
+		NOWHERE (new Pointt(0,0)),
+		UP (new Pointt(0, -1)), 
+		DOWN (new Pointt(0, 1)),
+		LEFT (new Pointt (-1, 0)),
+		RIGHT (new Pointt(1, 0));
+		
+		public final Pointt nudge;
+		public final float nudgeSpeed = 4;
+		NudgeMode(Pointt _nudge) {
+			nudge = _nudge;
+		}
+		public CoordVelocity getCoordVelocity(Pointt pointt) {
+			return new CoordVelocity( pointt.plus(nudge.multiply(nudgeSpeed)), new Pointt(nudgeSpeed, nudgeSpeed));
+		}
+	}
+	NudgeMode nudgeMode = NudgeMode.OFF;
+	
 	public DrawPointProvider(Pointt _startPoint, SVGFileChooser _svgFileChooser) {
 		svgFileChooser = _svgFileChooser;
 		startPoint = _startPoint.copy();
@@ -103,10 +122,10 @@ public class DrawPointProvider {
 			LoadSVGFile(svgFileChooser.getSVGFileFromDialog());
 		} else {
 //			paperProportionalRectangleCW(Settings.PAPER_DIMENSIONS.multiply(.15));
-			paperProportionalRectangle(Settings.PAPER_DIMENSIONS.multiply(.15));
+//			paperProportionalRectangle(Settings.PAPER_DIMENSIONS.multiply(.15));
 //			circle();
 //			spiralInnerToOuter();
-//			spiral();
+			spiral();
 //			squareSpiral();
 //			upAndDown();
 //			upAndDownTwoStepDown();
@@ -165,7 +184,7 @@ public class DrawPointProvider {
 		}
 	}
 	private void spiral() {
-		double r = 15; // DrawBot.CanvasHeight/2.0;
+		double r = 145; // DrawBot.CanvasHeight/2.0;
 		Pointt origin = startPoint.copy();
 		origin.y += r;
 		int slices = 8;
@@ -307,27 +326,22 @@ public class DrawPointProvider {
 	}
 
 	int gotNullCount = 0;
+	
 	public CoordVelocity nextPoint() {
+		if (!nudgeMode.equals(NudgeMode.OFF)) {
+			B.bug(currentCoordVelocity.getCoord());
+			currentCoordVelocity = nudgeMode.getCoordVelocity(currentCoordVelocity.getCoord());
+			return currentCoordVelocity;
+		}
 		
 		if (gotNullCount > 20 && pointInterpolator != null && !pointInterpolator.hasNext()) {
 			asyncDrawPoints.keepGoing.set(false);
 		}
 		
 		curIndex++;
-		CoordVelocity result = new CoordVelocity();
-
-		//want poll? 'remove()' throws an exception
-		result = getCVS().poll();
-		
-//		try {
-//			result = cvs.take(); // experi...
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		CoordVelocity result = getCVS().poll();
 		
 		if (result == null) {
-//			currentCoordVelocity = currentCoordVelocity.multiply(.1f);
-//			currentCoordVelocity = CoordVelocity.GoNowhereCoordVelocity();
 			currentCoordVelocity = new CoordVelocity(currentCoordVelocity.getCoord(), currentCoordVelocity.getVelocity().multiply(.01f));
 			++gotNullCount;
 			B.bugln("giving a dummy coord: null count: " + gotNullCount);

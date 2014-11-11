@@ -18,6 +18,7 @@ import javax.swing.Timer;
 
 import drawbotV3_2.BotController;
 import drawbotV3_2.DrawBot;
+import drawbotV3_2.DrawPointProvider.NudgeMode;
 import drawbotV3_2.KeyHandling;
 import drawbotV3_2.MotorInstructions;
 import drawbotV3_2.Settings;
@@ -29,11 +30,13 @@ public class TestClient extends JFrame implements KeyListener, KeyHandling, Acti
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private DrawBot drawBot = new DrawBot();
+	public final DrawBot drawBot = new DrawBot();
 	private BotController botController;
-	private boolean autoDraw = false;
+	public boolean autoDraw = false;
 	
-	private static int UPDATE_SPEED = 50; 
+	private static int UPDATE_SPEED = 50;
+	
+	public KeyHandling serialForKeyPresses;
 	
 	public TestClient() {
 //		Settings.TimeSlice_US *= 16;
@@ -82,8 +85,16 @@ public class TestClient extends JFrame implements KeyListener, KeyHandling, Acti
 		if (code == KeyEvent.VK_A){
 			autoDraw = !autoDraw;
 		}
+		if (serialForKeyPresses != null) {
+			serialForKeyPresses.doKeyPressed(e);
+		}
+		if (drawBot.drawPointProvider.nudgeMode.equals(NudgeMode.OFF)) {
+			UPDATE_SPEED = 50;
+		} else {
+			UPDATE_SPEED = 1;
+		}
 	}
-	private void doNextPoint() {
+	public void doNextPoint() {
 		for(int i=0; i < UPDATE_SPEED; ++i) {
 			MotorInstructions mIs = botController.nextMotorInstructions();
 			mIs.assertLimits();
