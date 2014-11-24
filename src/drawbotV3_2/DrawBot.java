@@ -105,9 +105,7 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener,
 
 	public void addNotify() {
 		super.addNotify();
-
-		drawPointProvider = new DrawPointProvider(machine.startPoint(),
-				new SVGFileChooser(this));
+		drawPointProvider = new DrawPointProvider(machine.startPoint(), new SVGFileChooser(this));
 		this.addKeyListener(this);
 		this.setFocusable(true);
 		setupCanvas();
@@ -126,15 +124,6 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener,
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		g2.drawImage(canvas, 0, 0, null);
-
-		// float canvasFitScale = 1f/(float)(CANVAS_SCALE);
-		// float xoffset = -Settings.MachineWidth * (CANVAS_SCALE - 1f) *.5f;
-		// float yoffset = -CanvasHeight * (CANVAS_SCALE - 1f) *.5f;
-		// g2.drawImage(canvas, AffineTransform.getTranslateInstance(xoffset,
-		// yoffset), null);
-
-		// drawMotorsAndChords(g2);
-		// drawDebugSomePoints(g2);
 		double percentDone = drawPointProvider.percentDone();
 		String percDone = percentDone >= 1.0 ? "DONE" : ""
 				+ String.format("%.3f", percentDone);
@@ -216,23 +205,11 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener,
 		thread.start();
 	}
 
-	// public static void mainNOT(String[] args) {
-	// DrawBot db = new DrawBot();
-	// Thread thread = new Thread(db);
-	// thread.start();
-	// }
 	private static void doSetup(DrawBot db) {
 		JFrame fr = new JFrame();
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		int CanvasWidth = (int) dim.getWidth();
-		if (FULL_SCREEN_MODE) {
-			// CanvasHeight = (int) dim.getHeight();
-			// fr.setExtendedState(JFrame.MAXIMIZED_BOTH);
-			// GraphicsDevice device =
-			// GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
-			// device.setFullScreenWindow(fr);
-		}
 
 		fr.setSize(CanvasWidth, CanvasHeight + lowerInfoHeight);
 		fr.setUndecorated(true);
@@ -244,14 +221,9 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener,
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		updateState();
-	}
+	public void actionPerformed(ActionEvent e) { updateState(); }
 
-	private void updateState() {
-		updateState(false);
-	}
-
+	private void updateState() { updateState(false); }
 	private void updateState(boolean goHome) {
 		updateMachine();
 		lastPoint = curPoint;
@@ -260,116 +232,67 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener,
 		repaint();
 	}
 
-	private void updateMachine() {
-		updateMachine(false);
-	}
-
 	private Pointt targetPoint() {
 		return _targetCV.getCoord();
 	}
-
+	
+	private void updateMachine() { updateMachine(false); }
 	private void updateMachine(boolean goHome) {
 		if (machine.readyForNextPoint()) {
-			CoordVelocity nextCoordVelocity = null;
-			while (true) {
-				nextCoordVelocity = nextPoint();
-				if (nextCoordVelocity == null) {
-					Asserter.assertFalseAndDie("no null coord vels please");
-					try { Thread.sleep(10);
-					} catch (InterruptedException e) { e.printStackTrace(); }
-				} else {
-					break;
-				}
-			}
-			_targetCV = nextCoordVelocity;
-			if (_targetCV == null) {
-				_targetCV = new CoordVelocity(machine.startPoint(),
-						new Pointt());
-			}
-			if (!goHome)
+			_targetCV = drawPointProvider.nextPoint();
+			Asserter.assertTrue(_targetCV != null, "no null coord vels please");
+			if (!goHome) {
 				currentMotorInstructions = machine.moveToPoint(_targetCV);
-			else
+			} else {
 				currentMotorInstructions = machine.moveToStartPoint();
+			}
 			penColorIndex = (penColorIndex + 1) % penColors.length;
 		}
 	}
 
-	// private Pointt nextPoint() {
-	// return drawPointProvider.nextPoint();
-	// }
-	private CoordVelocity nextPoint() {
-		return drawPointProvider.nextPoint();
-	}
-
 	private void drawOnCanvas() {
 		Graphics2D cgg = (Graphics2D) cg;
-		// if (machine.oneMotorArrivedFirst()) {
-		// cgg.setPaint(Color.WHITE);
-		// } else if (machine.sameDistanceToTarget()) {
-		// cgg.setPaint(Color.LIGHT_GRAY);
-		// } else {
-		// cgg.setPaint(penColors[penColorIndex]);
-		// }
 		if (!lastPoint.equals(new Pointt())) {
-			Line2D.Double nextLine = new Line2D.Double(lastPoint.point2D(),
-					curPoint.point2D());
+			Line2D.Double nextLine = new Line2D.Double(lastPoint.point2D(), curPoint.point2D());
 			cgg.draw(nextLine);
 		}
-		// Ellipse2D.Double curPointEll = new Ellipse2D.Double(curPoint.x,
-		// curPoint.y, 5, 5);
-		// cgg.draw(curPointEll);
-
 		cgg.setPaint(penColors[penColorIndex]);
 		cgg.draw(machine.prevToCurrentLine().arrow());
 	}
 
 	private void drawAllPoints(Graphics2D g) {
-		ArrayList<CoordVelocity> cvs = drawPointProvider
-				.getUninterpolatedPointts();
-		Ellipse2D.Double el;
+		ArrayList<CoordVelocity> cvs = drawPointProvider.getUninterpolatedPointts();
 		g.setPaint(Color.GRAY);
 		for (CoordVelocity cv : cvs) {
-			Pointt lo = cv.getCoord();
-			el = new Ellipse2D.Double(lo.x * CANVAS_SCALE, lo.y * CANVAS_SCALE,
-					.3, .3);
-			g.draw(el);
+			g.draw(new Ellipse2D.Double(cv.getCoord().x * CANVAS_SCALE, cv.getCoord().y * CANVAS_SCALE, .3, .3));
 		}
-		// want
 	}
 
 	private void setupCanvas() {
 		if (canvas == null) {
-			canvas = createImage(Settings.MACHINE_WIDTH * CANVAS_SCALE,
-					CanvasHeight * CANVAS_SCALE);
+			canvas = createImage(Settings.MACHINE_WIDTH * CANVAS_SCALE, CanvasHeight * CANVAS_SCALE);
 			cg = canvas.getGraphics();
 		}
 		Color bgcolor = isTestClient ? Color.GRAY : Color.DARK_GRAY;
 		cg.setColor(bgcolor);
-		cg.fillRect(0, 0, (int) (Settings.MACHINE_WIDTH * CANVAS_SCALE),
-				(int) (CanvasHeight * CANVAS_SCALE));
+		cg.fillRect(0, 0, (int) (Settings.MACHINE_WIDTH * CANVAS_SCALE), (int) (CanvasHeight * CANVAS_SCALE));
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// machine.doKeyPressed(e);
 		if (e.getKeyCode() == KeyEvent.VK_F) {
 			ImageUtil.imageToDisk(canvas);
 		}
 		if (serialForKeyPresses != null) {
 			B.bugln("draw bot ser for key pressed no null");
 			serialForKeyPresses.doKeyPressed(e);
-			
 		}
 	}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-	}
-
+	public void keyReleased(KeyEvent arg0) {}
 	@Override
-	public void keyTyped(KeyEvent arg0) {
-	}
-
+	public void keyTyped(KeyEvent arg0) {}
 	@Override
 	public MotorInstructions nextMotorInstructions() {
 		updateState();
