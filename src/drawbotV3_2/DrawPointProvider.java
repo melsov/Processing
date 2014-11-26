@@ -47,7 +47,7 @@ public class DrawPointProvider {
 		RIGHT (new Pointt(1, 0));
 		
 		public final Pointt nudge;
-		public final float nudgeSpeed = 4;
+		public final float nudgeSpeed = .1f;
 		NudgeMode(Pointt _nudge) {
 			nudge = _nudge;
 		}

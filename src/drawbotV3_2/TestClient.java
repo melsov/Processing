@@ -113,6 +113,5 @@ public class TestClient extends JFrame implements KeyListener, KeyHandling, Acti
 		if (autoDraw) {
 			doNextPoint();
 		}
-		
 	}
 }
