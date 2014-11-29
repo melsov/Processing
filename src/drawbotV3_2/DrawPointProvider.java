@@ -79,9 +79,6 @@ public class DrawPointProvider {
 		pointInterpolator = new PointtInterpolatorAsync(points);
 		cvList = pointInterpolator.interpolatePoints(DRAWPOINT_QUEUE_SIZE / 6);
 		cvs.addAll(cvList);
-		
-//		for(int i=0; i < 2; ++i)
-//			addMorePoints(cvList);
 	}
 	private void startDrawPointsThread() {
 		asyncDrawPoints = new AsyncDrawPoints();
@@ -93,19 +90,14 @@ public class DrawPointProvider {
 		ArrayList<CoordVelocity> cvlist = pointInterpolator.interpolatePoints(Math.min(cvs.remainingCapacity() - 3, 200));
 		if (bigCVList != null) bigCVList.addAll(cvlist);
 		for(CoordVelocity cv : cvlist) {
-				try { 
-//					cvs.put(cv);
-					cvs.offer(cv, 50, TimeUnit.MILLISECONDS);
-				} catch (InterruptedException e) {
-					B.bugln("add more points was interrupted");
-//					Asserter.assertFalseAndDie("death");
+				try {  cvs.offer(cv, 50, TimeUnit.MILLISECONDS); } catch (InterruptedException e) {
 					e.printStackTrace(); 
+					Asserter.assertFalseAndDie("add more points was interupted");
 				}
 		}
 		try { Thread.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
-	public class AsyncDrawPoints implements Runnable
-	{
+	public class AsyncDrawPoints implements Runnable {
 		public AtomicBoolean keepGoing = new AtomicBoolean(true);
 		@Override
 		public void run() {
@@ -138,23 +130,14 @@ public class DrawPointProvider {
 		points.add(0, startPoint.copy());
 		points.add(0, startPoint.copy());
 	}
-
 	
 	public void LoadSVGFile(String fileName) {
-		URI svgURI = null;
-		File f;
-		if (fileName == null) {
-			fileName = getDefaultFiles().get("rocky");
-		}
-		f = new File(fileName);
-		if (f.exists())
-			svgURI = f.toURI();
-		else {
-			B.bugln("file didn't work out: " + fileName);
-			B.bug("no svg file. death.");
-			System.exit(1);
-			return;
-		}
+		if (fileName == null) { fileName = getDefaultFiles().get("rocky"); }
+
+		File f = new File(fileName);
+		Asserter.assertTrue(f.exists(), "Bad file name? : " + fileName);
+		URI svgURI = f.toURI();
+		
 		SVGToPointt svgToPoint = new SVGToPointt(svgURI);
 		svgToPoint.loadFile();
 		
@@ -166,10 +149,8 @@ public class DrawPointProvider {
 		Pointt newMax = newMin.plus(Settings.PAPER_DIMENSIONS).minus(hedge);
 
 		points = svgToPoint.getPointSet().scaleToFitNewMinMax(newMin, newMax);
-		
-		if (points == null || points.size() == 0) {
-			Asserter.assertTrue(false, "null points");
-		}
+
+		Asserter.assertTrue(!(points == null || points.size() == 0), "null points or no points.");
 	}
 
 	private void circle() {
@@ -348,6 +329,7 @@ public class DrawPointProvider {
 		}
 		
 		if (gotNullCount > 20 && pointInterpolator != null && !pointInterpolator.hasNext()) {
+			Asserter.assertFalseAndDie("this happens? pointInterp doesn't have next?");
 			asyncDrawPoints.keepGoing.set(false);
 		}
 		

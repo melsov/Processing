@@ -35,28 +35,31 @@ public class PointtInterpolatorAsync
 	public ArrayList<CoordVelocity> interpolatePoints() {
 		return interpolatePoints(Integer.MAX_VALUE);
 	}
+	// TODO: make sure that this skips adding any points at all when INTERPOLATE POINTS is off.
+	/*
+	 * return an array list of coord velocities of max size "limit"
+	 */
 	public ArrayList<CoordVelocity> interpolatePoints(int limit) {
 		ArrayList<CoordVelocity> coVels = new ArrayList<CoordVelocity>();
-
-//		int startingIndex = outPointsIndex;
 		for (;pointsIndex < points.size() - 1;) {
 			limit = addInterpolatedCoordVelocity(coVels, limit);
-			if (limit == -1) {
-				break;
-			}
+			if (limit == -1) { break; }
 		}
 		return coVels;
 	}
+	/*
+	 * add up to "limit" points to "coVels". 
+	 * return -1 if we hit the limit, if not, return the difference between limit and points added. 
+	 */
 	private int addInterpolatedCoordVelocity(ArrayList<CoordVelocity> coVels, int limit) {
 		if (!trapezoidalInterpolator.hasNext()) {
-			
 			int pointsIndexOrig = pointsIndex + 1;
 			do {
 				origin = points.get(pointsIndexOrig);
 				pointsIndex++;
 				destination = pointsIndex + 1 < points.size() ? points.get(pointsIndex + 1) : origin.plus(new Pointt(.1,.1));
 				nextDestination = pointsIndex + 2 < points.size() ? points.get(pointsIndex + 2) : origin;
-			} while(!trapezoidalInterpolator.setUp(origin, destination, nextDestination)) ;
+			} while(!trapezoidalInterpolator.setUp(origin, destination, nextDestination));
 		}
 		
 		int startingIndex = outPointsIndex;

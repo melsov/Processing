@@ -287,6 +287,7 @@ public class DrawBot extends JPanel implements ActionListener, KeyListener,
 			B.bugln("draw bot ser for key pressed no null");
 			serialForKeyPresses.doKeyPressed(e);
 		}
+		B.bugln("got a key: "+ e.getKeyChar());
 	}
 
 	@Override
