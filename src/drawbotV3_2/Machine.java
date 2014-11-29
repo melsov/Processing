@@ -50,7 +50,6 @@ public class Machine
 			return MotorInstructions.GoNowhereInstructions();
 		}
 		Pointt p = covy.getCoord();
-		B.bug("Machine's next point: " + p.toString());
 		MotorInstructions nextMotorInstr = getNextMotorInstructions(covy);
 		nextMotorInstr = updateMotors(nextMotorInstr, targetPoint, covy); 
 

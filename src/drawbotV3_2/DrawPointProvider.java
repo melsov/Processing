@@ -125,7 +125,8 @@ public class DrawPointProvider {
 //			paperProportionalRectangle(Settings.PAPER_DIMENSIONS.multiply(.15));
 //			circle();
 //			spiralInnerToOuter();
-			spiral();
+//			spiral();
+			detailedCircle();
 //			squareSpiral();
 //			upAndDown();
 //			upAndDownTwoStepDown();
@@ -194,6 +195,18 @@ public class DrawPointProvider {
 			points.add(origin.plus(off));
 			r *= .99;
 //			if (r < .0001) break;
+		}
+	}
+	private void detailedCircle() {
+		double r = 145; // DrawBot.CanvasHeight/2.0;
+		Pointt origin = startPoint.copy();
+		origin.x += r;
+		int slices = 12;
+		double startAngle = PI;
+		for(int i=0; i < slices; ++i) {
+			double angle = startAngle + (i/(double) slices) * PI * 2;
+			Pointt off = new Pointt(r*cos(angle), -r*sin(angle));
+			points.add(origin.plus(off));
 		}
 	}
 	private void spiralInnerToOuter() {

@@ -164,7 +164,7 @@ public class SerialCallResponseASCIIV3_3SendInt extends PApplet implements Seria
 	}
 	
 	private void getMessageFromSerial() {
-		print(serialPort.readStringUntil('\n'));
+		print("SERIAL MSG: " +serialPort.readStringUntil('\n'));
 	}
 
 	int debug_count = 0;
