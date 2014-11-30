@@ -182,7 +182,7 @@ public class DrawPointProvider {
 		double r = 145; // DrawBot.CanvasHeight/2.0;
 		Pointt origin = startPoint.copy();
 		origin.x += r;
-		int slices = 12;
+		int slices = 9000;
 		double startAngle = PI;
 		for(int i=0; i < slices; ++i) {
 			double angle = startAngle + (i/(double) slices) * PI * 2;

@@ -40,8 +40,17 @@ public class PointtInterpolatorAsync
 	 * return an array list of coord velocities of max size "limit"
 	 */
 	public ArrayList<CoordVelocity> interpolatePoints(int limit) {
-		ArrayList<CoordVelocity> coVels = new ArrayList<CoordVelocity>();
+		ArrayList<CoordVelocity> coVels = new ArrayList<CoordVelocity>(limit);
 		for (;pointsIndex < points.size() - 1;) {
+			if (!Settings.INTERPOLATE_MODE){
+				pointsIndex = pointsIndex == -1 ? 0 : pointsIndex;
+				if (pointsIndex < points.size()) {
+					coVels.add(new CoordVelocity(points.get(pointsIndex++), new Pointt(.1,.1)));
+					return coVels;
+				}
+				return null;
+			}
+			Asserter.assertFalseAndDie("we won't get here");
 			limit = addInterpolatedCoordVelocity(coVels, limit);
 			if (limit == -1) { break; }
 		}
@@ -69,7 +78,6 @@ public class PointtInterpolatorAsync
 			if (outPointsIndex > startingIndex + limit) {
 				return -1;
 			}
-			if (!Settings.INTERPOLATE_MODE) break;
 		}
 		return limit - (outPointsIndex - startingIndex);
 	}

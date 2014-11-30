@@ -8,7 +8,7 @@ import drawbotV3_2.Motor;
  */
 public class Settings 
 {
-	public static boolean INTERPOLATE_MODE = true;
+	public static boolean INTERPOLATE_MODE = false;
 	public static boolean AssertLimits = true;
 
 	/*
